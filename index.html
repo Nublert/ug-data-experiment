@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ultimate Guitar – Top Tabs Stats</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0b1020;
+        --panel: rgba(255, 255, 255, 0.06);
+        --panel2: rgba(255, 255, 255, 0.09);
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.68);
+        --border: rgba(255, 255, 255, 0.14);
+        --accent: #00D197;
+        --accent2: #22c55e;
+        --danger: #ef4444;
+        --shadow: 0 22px 60px rgba(0, 0, 0, 0.45);
+        --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+          "Courier New", monospace;
+        --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
+          Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #f7f7ff;
+          --panel: rgba(0, 0, 0, 0.05);
+          --panel2: rgba(0, 0, 0, 0.08);
+          --text: rgba(0, 0, 0, 0.9);
+          --muted: rgba(0, 0, 0, 0.6);
+          --border: rgba(0, 0, 0, 0.12);
+          --shadow: 0 18px 44px rgba(0, 0, 0, 0.12);
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: var(--sans);
+        background: radial-gradient(1200px 600px at 20% -10%, rgba(124, 92, 255, 0.35), transparent 60%),
+          radial-gradient(900px 520px at 90% 0%, rgba(34, 197, 94, 0.20), transparent 65%),
+          linear-gradient(180deg, var(--bg), var(--bg));
+        color: var(--text);
+      }
+      a {
+        color: inherit;
+      }
+      .wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 28px 18px 64px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+      .title h1 {
+        margin: 0;
+        font-size: 20px;
+        letter-spacing: 0.2px;
+      }
+      .title p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        box-shadow: var(--shadow);
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 99px;
+        background: var(--accent2);
+        box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+      }
+      .dot.bad {
+        background: var(--danger);
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+      }
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        margin: 14px 0 18px;
+      }
+      .input {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px 12px;
+        color: var(--text);
+        font-size: 13px;
+        outline: none;
+      }
+      .btn {
+        border: 1px solid rgba(124, 92, 255, 0.35);
+        background: linear-gradient(180deg, rgba(124, 92, 255, 0.9), rgba(124, 92, 255, 0.65));
+        color: white;
+        border-radius: 12px;
+        padding: 10px 14px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+      }
+      .card {
+        padding: 14px 14px 12px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        min-height: 94px;
+      }
+      .k {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .v {
+        margin-top: 8px;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .sub {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 12px;
+        font-family: var(--mono);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .panel {
+        margin-top: 12px;
+        padding: 14px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+      }
+      .panel h2 {
+        margin: 0 0 10px;
+        font-size: 14px;
+        color: var(--muted);
+        font-weight: 700;
+        letter-spacing: 0.25px;
+        text-transform: uppercase;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th, td {
+        padding: 10px 8px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      th {
+        text-align: left;
+        color: var(--muted);
+        font-weight: 700;
+        user-select: none;
+        cursor: pointer;
+      }
+      th span {
+        opacity: 0.65;
+        font-weight: 600;
+        margin-left: 6px;
+      }
+      td.num {
+        font-family: var(--mono);
+        text-align: right;
+        white-space: nowrap;
+      }
+      td.type {
+        font-family: var(--mono);
+        opacity: 0.9;
+      }
+      .rowlink {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        text-decoration: none;
+      }
+      .rowlink:hover {
+        text-decoration: underline;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: var(--panel2);
+        border: 1px solid var(--border);
+        font-size: 12px;
+        font-family: var(--mono);
+        color: var(--muted);
+      }
+      .err {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        background: rgba(239, 68, 68, 0.12);
+        color: rgba(239, 68, 68, 0.95);
+        font-size: 13px;
+        display: none;
+      }
+      .footer {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 12px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .footer code {
+        font-family: var(--mono);
+      }
+      .bar-chart {
+        margin-top: 12px;
+      }
+      .bar-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+        min-height: 28px;
+      }
+      .bar-label {
+        flex: 0 0 200px;
+        font-size: 12px;
+        color: var(--text);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .bar-container {
+        flex: 1;
+        height: 24px;
+        background: var(--panel2);
+        border-radius: 6px;
+        position: relative;
+        overflow: hidden;
+      }
+      .bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent), rgba(0, 209, 151, 0.7));
+        border-radius: 6px;
+        transition: width 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 8px;
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        font-family: var(--mono);
+      }
+      .bar-value {
+        flex: 0 0 100px;
+        text-align: right;
+        font-size: 12px;
+        font-family: var(--mono);
+        color: var(--muted);
+      }
+      .view-more-btn {
+        margin-top: 12px;
+        padding: 8px 14px;
+        background: var(--panel2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text);
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .view-more-btn:hover {
+        background: var(--panel);
+        border-color: var(--accent);
+      }
+      .expandable-table {
+        margin-top: 12px;
+        display: none;
+      }
+      .expandable-table.show {
+        display: block;
+      }
+      .bar-chart.hidden {
+        display: none;
+      }
+      @media (max-width: 860px) {
+        header {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .controls {
+          grid-template-columns: 1fr;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        td.num {
+          text-align: left;
+        }
+        .bar-label {
+          flex: 0 0 120px;
+          font-size: 11px;
+        }
+        .bar-value {
+          flex: 0 0 70px;
+          font-size: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="title">
+          <h1>Ultimate Guitar — Top Tabs Stats</h1>
+          <p>
+            A single HTML page that shows summary statistics pulled from Ultimate Guitar’s “Top tabs” lists.
+            Data is loaded from <code>data/ug_top.json</code>.
+          </p>
+        </div>
+        <div class="pill" id="statusPill">
+          <span class="dot" id="statusDot"></span>
+          <span id="statusText">Ready</span>
+        </div>
+      </header>
+
+      <div class="controls">
+        <input class="input" id="filterInput" type="text" placeholder="Filter artist or song…" />
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="k">Total hits (sum)</div>
+          <div class="v" id="totalHits">—</div>
+          <div class="sub" id="totalHitsSub">—</div>
+        </div>
+      </div>
+
+      <div class="err" id="errorBox"></div>
+
+      <div class="panel">
+        <h2>Type distribution</h2>
+        <div id="typeChips" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+      </div>
+
+      <div class="panel" id="topArtistsPanel">
+        <h2>Top artists by hits</h2>
+        <div class="bar-chart" id="topArtistsChart"></div>
+        <div class="expandable-table" id="topArtistsTable"></div>
+        <button class="view-more-btn" id="topArtistsBtn">View more</button>
+      </div>
+
+      <div class="panel" id="topSongsPanel">
+        <h2>Top songs by hits</h2>
+        <div class="bar-chart" id="topSongsChart"></div>
+        <div class="expandable-table" id="topSongsTable"></div>
+        <button class="view-more-btn" id="topSongsBtn">View more</button>
+      </div>
+
+      <div class="panel" id="topSongsByTypePanel-chords">
+        <h2>Top songs by hits — Chords</h2>
+        <div class="bar-chart" id="topSongsByTypeChart-chords"></div>
+        <div class="expandable-table" id="topSongsByTypeTable-chords"></div>
+        <button class="view-more-btn" id="topSongsByTypeBtn-chords">View more</button>
+      </div>
+
+      <div class="panel" id="topSongsByTypePanel-tab">
+        <h2>Top songs by hits — Tab</h2>
+        <div class="bar-chart" id="topSongsByTypeChart-tab"></div>
+        <div class="expandable-table" id="topSongsByTypeTable-tab"></div>
+        <button class="view-more-btn" id="topSongsByTypeBtn-tab">View more</button>
+      </div>
+
+      <div class="panel" id="topSongsByTypePanel-guitar_pro">
+        <h2>Top songs by hits — Guitar Pro</h2>
+        <div class="bar-chart" id="topSongsByTypeChart-guitar_pro"></div>
+        <div class="expandable-table" id="topSongsByTypeTable-guitar_pro"></div>
+        <button class="view-more-btn" id="topSongsByTypeBtn-guitar_pro">View more</button>
+      </div>
+
+      <div class="panel" id="topSongsByTypePanel-bass">
+        <h2>Top songs by hits — Bass</h2>
+        <div class="bar-chart" id="topSongsByTypeChart-bass"></div>
+        <div class="expandable-table" id="topSongsByTypeTable-bass"></div>
+        <button class="view-more-btn" id="topSongsByTypeBtn-bass">View more</button>
+      </div>
+
+      <div class="panel" id="topSongsByTypePanel-ukulele">
+        <h2>Top songs by hits — Ukulele</h2>
+        <div class="bar-chart" id="topSongsByTypeChart-ukulele"></div>
+        <div class="expandable-table" id="topSongsByTypeTable-ukulele"></div>
+        <button class="view-more-btn" id="topSongsByTypeBtn-ukulele">View more</button>
+      </div>
+
+      <div class="panel">
+        <h2>Top list (sortable)</h2>
+        <div style="overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th data-sort="rank">Rank <span id="sort-rank"></span></th>
+                <th data-sort="artist">Artist <span id="sort-artist"></span></th>
+                <th data-sort="song">Song <span id="sort-song"></span></th>
+                <th data-sort="type">Type <span id="sort-type"></span></th>
+                <th data-sort="hits" style="text-align:right;">Hits <span id="sort-hits"></span></th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div class="footer">
+          <div>Cache file: <code>data/ug_top.json</code></div>
+          <div>Scraped: <code id="fetchedAt">—</code></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+
+      const state = {
+        raw: [],
+        filtered: [],
+        sortKey: "hits",
+        sortDir: "desc",
+        fetchedAt: null,
+        topArtists: [],
+        topSongs: [],
+        topSongsByType: {}
+      };
+
+      function setStatus(kind, text) {
+        $("statusText").textContent = text;
+        $("statusDot").classList.toggle("bad", kind === "bad");
+      }
+
+      function showError(msg) {
+        $("errorBox").style.display = "block";
+        $("errorBox").textContent = msg;
+        setStatus("bad", "Error");
+      }
+
+      function clearError() {
+        $("errorBox").style.display = "none";
+        $("errorBox").textContent = "";
+      }
+
+      function fmtInt(n) {
+        return new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(n);
+      }
+
+      function renderBarChart(containerId, data, topN = 20) {
+        const container = $(containerId);
+        if (!container) return;
+        
+        const topData = data.slice(0, topN);
+        const maxHits = topData.length > 0 ? Math.max(...topData.map(d => d.hits)) : 1;
+        
+        container.innerHTML = "";
+        
+        topData.forEach((item, idx) => {
+          const barItem = document.createElement("div");
+          barItem.className = "bar-item";
+          
+          const label = document.createElement("div");
+          label.className = "bar-label";
+          // Use label if available, otherwise construct from artist/song
+          if (item.label) {
+            label.textContent = item.label;
+          } else if (item.artist && item.song) {
+            label.textContent = `${item.artist} - ${item.song}`;
+          } else if (item.artist) {
+            label.textContent = item.artist;
+          } else {
+            label.textContent = "—";
+          }
+          
+          const barContainer = document.createElement("div");
+          barContainer.className = "bar-container";
+          
+          const barFill = document.createElement("div");
+          barFill.className = "bar-fill";
+          const width = maxHits > 0 ? (item.hits / maxHits) * 100 : 0;
+          barFill.style.width = `${width}%`;
+          if (width > 15) {
+            barFill.textContent = fmtInt(item.hits);
+          }
+          
+          const barValue = document.createElement("div");
+          barValue.className = "bar-value";
+          barValue.textContent = fmtInt(item.hits);
+          
+          barContainer.appendChild(barFill);
+          barItem.appendChild(label);
+          barItem.appendChild(barContainer);
+          barItem.appendChild(barValue);
+          container.appendChild(barItem);
+        });
+      }
+
+      function renderExpandableTable(containerId, data, columns) {
+        const container = $(containerId);
+        if (!container) return;
+        
+        const table = document.createElement("table");
+        const thead = document.createElement("thead");
+        const tbody = document.createElement("tbody");
+        
+        const headerRow = document.createElement("tr");
+        columns.forEach(col => {
+          const th = document.createElement("th");
+          th.textContent = col.label;
+          if (col.align === "right") {
+            th.style.textAlign = "right";
+          }
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        
+        data.forEach((item, idx) => {
+          const tr = document.createElement("tr");
+          columns.forEach(col => {
+            const td = document.createElement("td");
+            if (col.align === "right") {
+              td.className = "num";
+            }
+            td.textContent = col.format ? col.format(item[col.key], item) : (item[col.key] || "—");
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+        
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        container.innerHTML = "";
+        container.appendChild(table);
+      }
+
+      function setupExpandablePanel(panelId, chartContainerId, tableContainerId, btnId, data, columns) {
+        const panel = $(panelId);
+        const chartContainer = $(chartContainerId);
+        const tableContainer = $(tableContainerId);
+        const btn = $(btnId);
+        
+        if (!panel || !chartContainer || !tableContainer || !btn) return;
+        
+        let showingChart = true;
+        
+        // Remove any existing listeners by cloning the button
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        
+        newBtn.addEventListener("click", () => {
+          showingChart = !showingChart;
+          if (showingChart) {
+            chartContainer.classList.remove("hidden");
+            tableContainer.classList.remove("show");
+            newBtn.textContent = "View more";
+          } else {
+            chartContainer.classList.add("hidden");
+            tableContainer.classList.add("show");
+            newBtn.textContent = "Show chart";
+            renderExpandableTable(tableContainerId, data, columns);
+          }
+        });
+      }
+
+      function compute() {
+        const q = ($("filterInput").value || "").trim().toLowerCase();
+        let items = state.raw;
+        if (q) {
+          items = items.filter((x) => {
+            const a = (x.artist || "").toLowerCase();
+            const s = (x.song || "").toLowerCase();
+            return a.includes(q) || s.includes(q);
+          });
+        }
+        state.filtered = items;
+
+        const totalHits = items.reduce((acc, x) => acc + (Number(x.hits) || 0), 0);
+        $("totalHits").textContent = fmtInt(totalHits);
+        $("totalHitsSub").textContent = totalHits ? "Sum of displayed rows" : "—";
+
+        const hitsByType = new Map();
+        for (const x of items) {
+          const t = (x.type || "unknown").toLowerCase();
+          hitsByType.set(t, (hitsByType.get(t) || 0) + (Number(x.hits) || 0));
+        }
+
+        renderTypeChips(hitsByType);
+        
+        // Calculate top artists by hits
+        const artistHits = new Map();
+        items.forEach(x => {
+          const artist = x.artist || "Unknown";
+          artistHits.set(artist, (artistHits.get(artist) || 0) + (Number(x.hits) || 0));
+        });
+        const allArtists = Array.from(artistHits.entries())
+          .sort((a, b) => b[1] - a[1])
+          .map(([artist, hits]) => ({ artist, hits, label: artist }));
+        state.topArtists = allArtists;
+        
+        // Calculate top songs by hits (group by artist+song)
+        const songHits = new Map();
+        items.forEach(x => {
+          const key = `${x.artist || "Unknown"}|||${x.song || "Unknown"}`;
+          songHits.set(key, (songHits.get(key) || 0) + (Number(x.hits) || 0));
+        });
+        const allSongs = Array.from(songHits.entries())
+          .map(([key, hits]) => {
+            const [artist, song] = key.split("|||");
+            return { artist, song, hits, label: `${artist} - ${song}` };
+          })
+          .sort((a, b) => b.hits - a.hits);
+        state.topSongs = allSongs;
+        
+        // Helper function to extract artist/song from _raw field when missing
+        function extractFromRaw(raw, type) {
+          if (!raw) return { artist: null, song: null };
+          
+          // Format: "[rank] [Song] [Artist] [Type] [hits]" 
+          // Examples:
+          // "2 Over The Rainbow Israel Kamakawiwoʻole Ukulele 3,471,776"
+          // "45 Für Elise Ludwig van Beethoven Ukulele 324,834"
+          
+          const parts = raw.trim().split(/\s+/);
+          if (parts.length < 4) return { artist: null, song: null };
+          
+          // Find the type word (case-insensitive)
+          const typeIndex = parts.findIndex((p, i) => i > 0 && p.toLowerCase() === type.toLowerCase());
+          if (typeIndex < 2) return { artist: null, song: null };
+          
+          // Everything before typeIndex: rank (first) + song + artist
+          const beforeType = parts.slice(0, typeIndex);
+          if (beforeType.length < 3) return { artist: null, song: null };
+          
+          // First token is rank (number), skip it
+          const afterRank = beforeType.slice(1);
+          if (afterRank.length < 2) return { artist: null, song: null };
+          
+          // Heuristic: artist is typically the last 1-3 words before type
+          // Try different splits: last 1 word, last 2 words, last 3 words
+          // Prefer splits where artist name looks reasonable (has capital letters, not too short)
+          let bestSplit = { artist: null, song: null };
+          
+          for (let artistWords = 1; artistWords <= Math.min(3, afterRank.length - 1); artistWords++) {
+            const artist = afterRank.slice(-artistWords).join(" ");
+            const song = afterRank.slice(0, -artistWords).join(" ");
+            
+            // Prefer splits where artist has at least one capital letter and reasonable length
+            if (artist && song && /[A-Z]/.test(artist) && artist.length >= 3) {
+              bestSplit = { artist, song };
+              // If artist starts with capital and has reasonable length, use this split
+              if (/^[A-Z]/.test(artist.split(" ")[0])) {
+                break;
+              }
+            }
+          }
+          
+          return bestSplit.artist ? bestSplit : { artist: null, song: null };
+        }
+
+        // Calculate top songs by type
+        const types = ["chords", "tab", "guitar_pro", "bass", "ukulele"];
+        const topSongsByType = {};
+        types.forEach(type => {
+          const typeItems = items.filter(x => (x.type || "").toLowerCase() === type);
+          const songHitsByType = new Map();
+          typeItems.forEach(x => {
+            // Extract artist/song, using _raw if missing
+            let artist = x.artist;
+            let song = x.song;
+            
+            if (!artist || !song || artist.trim() === "" || song.trim() === "") {
+              const extracted = extractFromRaw(x._raw, type);
+              artist = extracted.artist || artist || "Unknown";
+              song = extracted.song || song || "Unknown";
+            }
+            
+            // Normalize: ensure we have valid strings
+            artist = (artist && artist.trim()) || "Unknown";
+            song = (song && song.trim()) || "Unknown";
+            
+            const key = `${artist}|||${song}`;
+            const hits = Number(x.hits) || 0;
+            // #region agent log
+            if (type === "ukulele" && (artist === "Unknown" || song === "Unknown")) {
+              fetch('http://127.0.0.1:7242/ingest/98c70eaf-6933-4f45-ab7b-95b0aa21f196',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:690','message':'Processing entry with extracted data','data':{originalArtist:x.artist,originalSong:x.song,extractedArtist:artist,extractedSong:song,raw:x._raw,key:key,hits:hits},timestamp:Date.now(),runId:'post-fix',hypothesisId:'H1'})}).catch(()=>{});
+            }
+            // #endregion
+            songHitsByType.set(key, (songHitsByType.get(key) || 0) + hits);
+          });
+          const allSongsForType = Array.from(songHitsByType.entries())
+            .map(([key, hits]) => {
+              const [artist, song] = key.split("|||");
+              return { artist, song, hits, label: `${artist} - ${song}` };
+            })
+            .sort((a, b) => b.hits - a.hits);
+          // #region agent log
+          if (type === "ukulele") {
+            const unknownEntry = allSongsForType.find(e => e.artist === "Unknown" && e.song === "Unknown");
+            fetch('http://127.0.0.1:7242/ingest/98c70eaf-6933-4f45-ab7b-95b0aa21f196',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'index.html:705','message':'Final ukulele results','data':{hasUnknownEntry:!!unknownEntry,unknownEntry:unknownEntry,topEntries:allSongsForType.slice(0,5)},timestamp:Date.now(),runId:'post-fix',hypothesisId:'H1'})}).catch(()=>{});
+          }
+          // #endregion
+          topSongsByType[type] = allSongsForType;
+        });
+        state.topSongsByType = topSongsByType;
+        
+        renderStatisticsPanels();
+        renderTable();
+      }
+
+      function renderTypeChips(hitsByType) {
+        const chips = Array.from(hitsByType.entries()).sort((a, b) => b[1] - a[1]);
+        const el = $("typeChips");
+        el.innerHTML = "";
+        for (const [t, hits] of chips) {
+          const d = document.createElement("div");
+          d.className = "tag";
+          d.textContent = `${t}: ${fmtInt(hits)} hits`;
+          el.appendChild(d);
+        }
+      }
+
+      function renderStatisticsPanels() {
+        // Render top artists
+        const artistsPanel = $("topArtistsPanel");
+        if (state.topArtists && state.topArtists.length > 0) {
+          if (artistsPanel) artistsPanel.style.display = "block";
+          renderBarChart("topArtistsChart", state.topArtists, 20);
+          setupExpandablePanel(
+            "topArtistsPanel",
+            "topArtistsChart",
+            "topArtistsTable",
+            "topArtistsBtn",
+            state.topArtists,
+            [
+              { key: "artist", label: "Artist" },
+              { key: "hits", label: "Hits", align: "right", format: (val) => fmtInt(val) }
+            ]
+          );
+        } else {
+          if (artistsPanel) artistsPanel.style.display = "none";
+        }
+        
+        // Render top songs
+        const songsPanel = $("topSongsPanel");
+        if (state.topSongs && state.topSongs.length > 0) {
+          if (songsPanel) songsPanel.style.display = "block";
+          renderBarChart("topSongsChart", state.topSongs, 20);
+          setupExpandablePanel(
+            "topSongsPanel",
+            "topSongsChart",
+            "topSongsTable",
+            "topSongsBtn",
+            state.topSongs,
+            [
+              { key: "artist", label: "Artist" },
+              { key: "song", label: "Song" },
+              { key: "hits", label: "Hits", align: "right", format: (val) => fmtInt(val) }
+            ]
+          );
+        } else {
+          if (songsPanel) songsPanel.style.display = "none";
+        }
+        
+        // Render top songs by type
+        if (state.topSongsByType) {
+          const types = ["chords", "tab", "guitar_pro", "bass", "ukulele"];
+          types.forEach(type => {
+            const data = state.topSongsByType[type];
+            const panelId = `topSongsByTypePanel-${type}`;
+            const panel = $(panelId);
+            
+            if (data && data.length > 0) {
+              if (panel) panel.style.display = "block";
+              const chartId = `topSongsByTypeChart-${type}`;
+              const tableId = `topSongsByTypeTable-${type}`;
+              const btnId = `topSongsByTypeBtn-${type}`;
+              
+              renderBarChart(chartId, data, 20);
+              setupExpandablePanel(
+                panelId,
+                chartId,
+                tableId,
+                btnId,
+                data,
+                [
+                  { key: "artist", label: "Artist" },
+                  { key: "song", label: "Song" },
+                  { key: "hits", label: "Hits", align: "right", format: (val) => fmtInt(val) }
+                ]
+              );
+            } else {
+              if (panel) panel.style.display = "none";
+            }
+          });
+        }
+      }
+
+      function sortItems(items) {
+        const { sortKey, sortDir } = state;
+        const dir = sortDir === "asc" ? 1 : -1;
+        const copy = items.slice();
+        copy.sort((a, b) => {
+          let av = a[sortKey];
+          let bv = b[sortKey];
+          if (sortKey === "rank") {
+            av = a._rank;
+            bv = b._rank;
+          }
+          if (sortKey === "hits") {
+            return (Number(av) - Number(bv)) * dir;
+          }
+          const as = String(av ?? "").toLowerCase();
+          const bs = String(bv ?? "").toLowerCase();
+          return as < bs ? -1 * dir : as > bs ? 1 * dir : 0;
+        });
+        return copy;
+      }
+
+      function renderSortIndicators() {
+        const keys = ["rank", "artist", "song", "type", "hits"];
+        for (const k of keys) {
+          const el = $("sort-" + k);
+          if (!el) continue;
+          el.textContent = state.sortKey === k ? (state.sortDir === "asc" ? "↑" : "↓") : "";
+        }
+      }
+
+      function renderTable() {
+        renderSortIndicators();
+        const items = sortItems(state.filtered).map((x, idx) => ({ ...x, _rank: x._rank ?? idx + 1 }));
+        const tb = $("tbody");
+        tb.innerHTML = "";
+
+        const frag = document.createDocumentFragment();
+        items.forEach((x, i) => {
+          const tr = document.createElement("tr");
+          const rank = x._rank ?? i + 1;
+
+          const tdRank = document.createElement("td");
+          tdRank.className = "num";
+          tdRank.textContent = String(rank);
+
+          const tdArtist = document.createElement("td");
+          const tdSong = document.createElement("td");
+          const link = document.createElement("a");
+          link.className = "rowlink";
+          link.href = x.url || "#";
+          link.target = "_blank";
+          link.rel = "noreferrer";
+          link.textContent = x.artist || "—";
+          tdArtist.appendChild(link);
+
+          tdSong.textContent = x.song || "—";
+
+          const tdType = document.createElement("td");
+          tdType.className = "type";
+          tdType.textContent = x.type || "—";
+
+          const tdHits = document.createElement("td");
+          tdHits.className = "num";
+          tdHits.textContent = typeof x.hits === "number" ? fmtInt(x.hits) : "—";
+
+          tr.appendChild(tdRank);
+          tr.appendChild(tdArtist);
+          tr.appendChild(tdSong);
+          tr.appendChild(tdType);
+          tr.appendChild(tdHits);
+          frag.appendChild(tr);
+        });
+        tb.appendChild(frag);
+      }
+
+      async function loadFromCache() {
+        clearError();
+        setStatus("good", "Loading…");
+
+        try {
+          const res = await fetch("/data/ug_top.json");
+          const data = await res.json();
+          if (!res.ok) throw new Error(data?.details || data?.error || `HTTP ${res.status}`);
+
+          state.fetchedAt = data.meta?.scraped_at || null;
+
+          const rows = Array.isArray(data.rows) ? data.rows : [];
+          state.raw = rows.map((x, i) => ({ ...x, _rank: i + 1 }));
+
+          $("fetchedAt").textContent = state.fetchedAt || "—";
+
+          setStatus("good", `Loaded ${rows.length} rows`);
+          compute();
+        } catch (e) {
+          showError(e instanceof Error ? e.message : String(e));
+        }
+      }
+
+      // Wire up UI.
+      $("filterInput").addEventListener("input", compute);
+
+      document.querySelectorAll("th[data-sort]").forEach((th) => {
+        th.addEventListener("click", () => {
+          const key = th.getAttribute("data-sort");
+          if (!key) return;
+          if (state.sortKey === key) {
+            state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+          } else {
+            state.sortKey = key;
+            state.sortDir = key === "artist" || key === "song" || key === "type" ? "asc" : "desc";
+          }
+          renderTable();
+        });
+      });
+
+      // Try to load existing cache on first open (no scraping).
+      loadFromCache().catch(() => {
+        setStatus("bad", "No cache yet – click Refresh data");
+      });
+    </script>
+  </body>
+</html>
+
